@@ -1,0 +1,20 @@
+ActsAsDecryptable
+=================
+
+ActsAsDecryptable allows you to encrypt one or more ActiveRecord fields. Few options, no frills.
+
+
+Example
+=======
+
+class SomeModel < ActiveRecord::Base
+  acts_as_decryptable :encrypt => [:name, :email], :key => "SOME_KEY", :show => '*' * 8
+end
+
+object = SomeModel.new
+object.name = "name"
+object.save
+object.name                        # => "********"
+object.decrypted_name              # => "name"
+
+Copyright (c) 2011 Hwan-Joon Choi, released under the MIT license
