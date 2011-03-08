@@ -3,6 +3,7 @@ require 'test/unit'
 require 'rubygems'
 gem 'activerecord', '>= 1.15.4.7794'
 require 'active_record'
+require 'cgi'
 
 require "#{File.dirname(__FILE__)}/../init"
 

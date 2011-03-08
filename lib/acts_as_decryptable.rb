@@ -23,13 +23,22 @@ module ActiveRecord
           configuration[:encrypt].each do |field_name|
             class_eval <<-EOV
               def #{field_name}=(value)
-                if value.present? && value != #{configuration[:show].to_json}
-                  self[:#{field_name}] = SymmetricCrypto.encrypt(value, #{configuration[:key].to_json})
+                if value.present?
+                  if value != #{configuration[:show].to_json}
+                    self[:#{field_name}] = CGI::escape(SymmetricCrypto.encrypt(value, #{configuration[:key].to_json}))
+                  end
+                else
+                  self[:#{field_name}] = nil
                 end
               end
 
               def decrypt_#{field_name}
-                SymmetricCrypto.decrypt(self[:#{field_name}], #{configuration[:key].to_json})
+                value = self[:#{field_name}]
+                if value.present?
+                  SymmetricCrypto.decrypt(CGI::unescape(value), #{configuration[:key].to_json})
+                else
+                  nil
+                end
               end
             EOV
 
